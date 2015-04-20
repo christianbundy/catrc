@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Don't ignore dotfiles
+shopt -s dotglob nullglob
+
+CATRC_HOME="$HOME/.catrc"
+
+for FILE in $CATRC_HOME/*; do
+  if [ -f "$FILE" ]; then
+    rm -f "$FILE"
+  fi
+done
+
+for DIR in $CATRC_HOME/*/; do
+  for FILE in $DIR*; do
+    if [ -f "$FILE" ]; then
+      NAME=$(basename "$FILE")
+      cat "$FILE" >> "$CATRC_HOME/$NAME"
+    fi
+  done
+done
+
+for FILE in $CATRC_HOME/*; do
+  if [ -f "$FILE" ]; then
+    NAME=$(basename "$FILE")
+    echo "$FILE"
+    ln -sf "$FILE" "$HOME/$NAME"
+  fi
+done
